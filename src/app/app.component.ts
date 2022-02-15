@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ErrorService } from './error.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,14 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor() {}
+
+  constructor(
+    private errorService: ErrorService,
+  ) {
+    this.initializeApp();
+  }
+
+  initializeApp() {
+    this.errorService.initialize();
+  }
 }

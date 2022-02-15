@@ -1,5 +1,7 @@
 {
   "name": "sentry-capacitor-breadcrumb-characters-issue",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }
