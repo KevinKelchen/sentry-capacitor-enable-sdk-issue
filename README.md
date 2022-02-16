@@ -54,9 +54,13 @@ You can use either Capacitor's Live Reload feature or manually build the app (fr
 
 - Open `/src/app/error.service.ts` and for the `dsn` value specify the Sentry DSN you'd like to use.
 - Get the app running by following [Running the App](#running-the-app).
-- Once the app is running, click the button that says `Trigger Error with Good Breadcrumb`.
-  - The click event will be handled in `/src/app/home/home.page.ts`. It will add a fake XHR breadcrumb that contains no special characters and then attempt to send the event to Sentry.
-- Wait for a minute or so and the event should appear in Sentry. The name of the error will be `This error should include a good breadcrumb`.
-- In the app, click the button that says `Trigger Error with Bad Breadcrumb`.
-  - The click event will be handled in `/src/app/home/home.page.ts`. It will add a fake XHR breadcrumb that *does* contain a special character and then attempt to send the event to Sentry.
-- Wait for a minute or so and the event will never appear in Sentry. The name of the error would be `This error should include a bad breadcrumb`.
+- Once the app is running, click the button that says `Trigger Error`.
+  - The click event will be handled in `/src/app/home/home.page.ts`. It will attempt to send the event to Sentry.
+- Wait for a minute or so and the event should appear in Sentry. The name of the error will be `This error should result in unknown metadata`.
+- View the event in Sentry.
+- The banner will be present that says `There were [x] problems processing this event`.
+- Click `Show` on the banner to view the problems.
+- On iOS the problem will be
+  - `sdkProcessingMetadata: Discarded unknown attribute`
+- On Android the problem will be
+  - `unknown: Discarded unknown attribute`
