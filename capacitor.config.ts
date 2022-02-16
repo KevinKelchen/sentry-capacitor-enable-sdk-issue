@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
-  appName: 'sentry-capacitor-breadcrumb-characters-issue',
+  appName: 'sentry-capacitor-unknown-metadata-issue',
   webDir: 'www',
   bundledWebRuntime: false
 };

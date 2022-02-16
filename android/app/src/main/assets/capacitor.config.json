@@ -1,9 +1,6 @@
 {
 	"appId": "io.ionic.starter",
-	"appName": "sentry-capacitor-breadcrumb-characters-issue",
+	"appName": "sentry-capacitor-unknown-metadata-issue",
 	"webDir": "www",
-	"bundledWebRuntime": false,
-	"server": {
-		"url": "http://192.168.0.104:8101"
-	}
+	"bundledWebRuntime": false
 }

@@ -1,4 +1,4 @@
-# sentry-capacitor-breadcrumb-characters-issue
+# sentry-capacitor-unknown-metadata-issue
 
 ## Overview
 
