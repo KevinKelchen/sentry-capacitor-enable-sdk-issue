@@ -1,0 +1,32 @@
+diff --git a/node_modules/@capacitor/camera/android/src/main/java/com/capacitorjs/plugins/camera/CameraPlugin.java b/node_modules/@capacitor/camera/android/src/main/java/com/capacitorjs/plugins/camera/CameraPlugin.java
+index 9d77e13..ece8516 100644
+--- a/node_modules/@capacitor/camera/android/src/main/java/com/capacitorjs/plugins/camera/CameraPlugin.java
++++ b/node_modules/@capacitor/camera/android/src/main/java/com/capacitorjs/plugins/camera/CameraPlugin.java
+@@ -91,9 +91,11 @@ public class CameraPlugin extends Plugin {
+ 
+     @PluginMethod
+     public void getPhoto(PluginCall call) {
+-        isEdited = false;
+-        settings = getSettings(call);
+-        doShow(call);
++        throw new Error("Hardcoded native error for Sentry Capacitor testing");
++
++        // isEdited = false;
++        // settings = getSettings(call);
++        // doShow(call);
+     }
+ 
+     @PluginMethod
+diff --git a/node_modules/@capacitor/camera/ios/Plugin/CameraPlugin.swift b/node_modules/@capacitor/camera/ios/Plugin/CameraPlugin.swift
+index 1dd8a1c..88cb260 100644
+--- a/node_modules/@capacitor/camera/ios/Plugin/CameraPlugin.swift
++++ b/node_modules/@capacitor/camera/ios/Plugin/CameraPlugin.swift
+@@ -67,6 +67,8 @@ public class CameraPlugin: CAPPlugin {
+     }
+ 
+     @objc func getPhoto(_ call: CAPPluginCall) {
++        fatalError("Hardcoded native error for Sentry Capacitor testing")
++
+         self.multiple = false
+         self.call = call
+         self.settings = cameraSettings(from: call)
