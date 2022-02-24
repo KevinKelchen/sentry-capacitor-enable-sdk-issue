@@ -1,4 +1,4 @@
-# sentry-capacitor-unknown-metadata-issue
+# sentry-capacitor-enable-sdk-issue
 
 ## Overview
 
