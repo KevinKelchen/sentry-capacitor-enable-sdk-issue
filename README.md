@@ -53,14 +53,57 @@ You can use either Capacitor's Live Reload feature or manually build the app (fr
 ## Steps to Reproduce
 
 - Open `/src/app/error.service.ts` and for the `dsn` value specify the Sentry DSN you'd like to use.
-- Get the app running by following [Running the App](#running-the-app).
-- Once the app is running, click the button that says `Trigger Error`.
-  - The click event will be handled in `/src/app/home/home.page.ts`. It will attempt to send the event to Sentry.
-- Wait for a minute or so and the event should appear in Sentry. The name of the error will be `This error should result in unknown metadata`.
-- View the event in Sentry.
-- The banner will be present that says `There were [x] problems processing this event`.
-- Click `Show` on the banner to view the problems.
-- On iOS the problem will be
-  - `sdkProcessingMetadata: Discarded unknown attribute`
-- On Android the problem will be
-  - `unknown: Discarded unknown attribute`
+
+- Scenario 1 - `enabled` and `enableNative` flags at initialization do not stop Android native errors:
+  - In `/src/app/error.service.ts`, in the Sentry `init()` function, set:
+    ```typescript
+      enabled: false, // Default value is `true`.
+      enableNative: false, // Default value is `true`.
+    ```
+  - Get the app running by following [Running the App](#running-the-app).
+  - Once the app is running, click the button that says `Trigger JavaScript Error`.
+    - The click event will be handled in `/src/app/home/home.page.ts`. If you wait for a minute or so the event should not appear in Sentry. The name of the error would be `Hardcoded JavaScript error for Sentry Capacitor testing`.
+    - The JavaScript error not being sent to Sentry is expected. Just setting `enabled: false` is enough to do that.
+  - Now click the button that says `Trigger Native Error`.
+    - The click event will be handled in `/src/app/home/home.page.ts`. The Capacitor Camera plugin has been modified via `patch-package` to throw a native error and crash the app.
+    - Re-open the app so the native error has a chance to be sent to Sentry.
+    - On Android,
+      - If you wait for a minute or so the event should appear in Sentry. The name of the error will be `Hardcoded JavaScript error for Sentry Capacitor testing`.
+      - The native error being sent to Sentry is not expected. Expected `enabled: false` to prevent that from happening as it seems like a blanket setting to enable/disable the entire SDK.
+        - Also, even `enableNative: false` is not enough to prevent the native error from being sent.
+        - The combination of `enabled: false` and a *different* flag, `enableNativeCrashHandling: false`, *will* prevent the native error from being sent to Sentry. However, expected `enabled: false` (and perhaps even `enableNative: false`) to be sufficient.
+    - On iOS,
+      - If you wait for a minute or so the event should not appear in Sentry. The name of the error would be `Hardcoded JavaScript error for Sentry Capacitor testing`.
+      - The native error not being sent to Sentry is expected. Just setting `enabled: false` is enough to do that.
+- Scenario 2 - Disabling the SDK at runtime does not stop Android and iOS native errors
+  - If there are pending changes from following the steps in Scenario 1, undo those changes first. Given the default values, the following values will effectively be used:
+    ```typescript
+      enabled: true, // Default value is `true`.
+      enableNative: true, // Default value is `true`.
+      enableNativeCrashHandling: true, // Default value is `true`.
+    ```
+  - Get the app running by following [Running the App](#running-the-app).
+  - Once the app is running, click the button that says `Disable Error Service`.
+    - This will attempt to disable the SDK by doing the following:
+      ```typescript
+      // Stop sending events to Sentry.
+      // For more info see: https://github.com/getsentry/sentry-javascript/issues/2039#issuecomment-486674574
+      getCurrentHub().getClient().getOptions().enabled = false;
+
+      // Attempt to stop native events as well.
+      // Casting `Options` as `any` due to the typings not including the additional Capacitor SDK options.
+      // The options are present at runtime if you inspect them.
+      (getCurrentHub().getClient().getOptions() as any).enableNative = false;
+      (getCurrentHub().getClient().getOptions() as any).enableNativeCrashHandling = false;
+      ```
+  - Next click the button that says `Trigger JavaScript Error`.
+    - The click event will be handled in `/src/app/home/home.page.ts`. If you wait for a minute or so the event should not appear in Sentry. The name of the error would be `Hardcoded JavaScript error for Sentry Capacitor testing`.
+      - The JavaScript error not being sent to Sentry is expected. Just setting `getCurrentHub().getClient().getOptions().enabled = false` is enough to do that.
+  - Now click the button that says `Trigger Native Error`.
+    - The click event will be handled in `/src/app/home/home.page.ts`. The Capacitor Camera plugin has been modified via `patch-package` to throw a native error and crash the app.
+    - Re-open the app so the native error has a chance to be sent to Sentry.
+    - On Android or iOS,
+      - If you wait for a minute or so the event should appear in Sentry. The name of the error will be `Hardcoded JavaScript error for Sentry Capacitor testing`.
+      - The native error being sent to Sentry is not expected. Expected `getCurrentHub().getClient().getOptions().enabled = false` to prevent that from happening as it seems like a blanket setting to enable/disable the entire SDK. Using that API for the JavaScript SDK was recommended in https://github.com/getsentry/sentry-javascript/issues/2039#issuecomment-486674574 .
+        - Also, even `(getCurrentHub().getClient().getOptions() as any).enableNative = false` and `(getCurrentHub().getClient().getOptions() as any).enableNativeCrashHandling = false` are not enough to prevent the native error from being sent.
+        - Expected `getCurrentHub().getClient().getOptions().enabled = false` (and perhaps even `(getCurrentHub().getClient().getOptions() as any).enableNative` with `(getCurrentHub().getClient().getOptions() as any).enableNativeCrashHandling`) to be sufficient.
