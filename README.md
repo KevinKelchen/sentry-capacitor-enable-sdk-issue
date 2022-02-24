@@ -5,7 +5,7 @@
 This repo is a reproduction sample app for what appears to be an issue in [Sentry Capacitor](https://github.com/getsentry/sentry-capacitor).
 
 The sample app uses the following libraries at these approximate versions
-- Sentry Capacitor - `0.4.2`
+- Sentry Capacitor - `0.4.3`
 - Capacitor - `3.4.1`
 - Angular - `13.0.0`
 - Ionic Angular - `6.0.0`
