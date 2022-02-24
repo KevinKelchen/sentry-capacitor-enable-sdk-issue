@@ -54,7 +54,7 @@ You can use either Capacitor's Live Reload feature or manually build the app (fr
 
 - Open `/src/app/error.service.ts` and for the `dsn` value specify the Sentry DSN you'd like to use.
 
-- Scenario 1 - `enabled` and `enableNative` flags at initialization do not stop Android native errors:
+- Scenario 1 - `enabled` and `enableNative` flags at initialization do not stop Android native errors
   - In `/src/app/error.service.ts`, in the Sentry `init()` function, set:
     ```typescript
       enabled: false, // Default value is `true`.
